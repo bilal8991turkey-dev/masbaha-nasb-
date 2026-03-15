@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عداد التسبيح</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .counter-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 72px;
+            font-weight: bold;
+            padding: 40px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            min-height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .btn-increment {
+            background: #667eea;
+            color: white;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .btn-increment:hover {
+            background: #5568d3;
+            transform: scale(1.05);
+        }
+
+        .btn-increment:active {
+            transform: scale(0.98);
+        }
+
+        .btn-reset {
+            background: #ff6b6b;
+            color: white;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .btn-reset:hover {
+            background: #ff5252;
+        }
+
+        .btn-minus {
+            background: #ffa500;
+            color: white;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .btn-minus:hover {
+            background: #ff9500;
+        }
+
+        .quick-presets {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .preset-btn {
+            background: #ecf0f1;
+            color: #333;
+            padding: 8px 15px;
+            font-size: 12px;
+            border-radius: 8px;
+        }
+
+        .preset-btn:hover {
+            background: #bdc3c7;
+        }
+
+        .stats {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤲 عداد التسبيح</h1>
+        <p class="subtitle">حسّب تسبيحاتك بسهولة</p>
+
+        <div class="counter-display" id="counterDisplay">0</div>
+
+        <div class="buttons">
+            <button class="btn-increment" onclick="increment()">➕ إضافة</button>
+            <button class="btn-minus" onclick="decrement()">➖ طرح</button>
+            <button class="btn-reset" onclick="reset()">🔄 إعادة تعيين</button>
+        </div>
+
+        <div class="quick-presets">
+            <button class="preset-btn" onclick="addValue(33)">+33</button>
+            <button class="preset-btn" onclick="addValue(99)">+99</button>
+            <button class="preset-btn" onclick="addValue(100)">+100</button>
+        </div>
+
+        <div class="stats">
+            <p>السجل: <span id="history"></span></p>
+        </div>
+    </div>
+
+    <script>
+        let count = 0;
+        const maxStorage = 10;
+        let history = [];
+
+        // تحميل البيانات المحفوظة
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('tasbeehCount');
+            const savedHistory = localStorage.getItem('tasbeehHistory');
+            if (saved) {
+                count = parseInt(saved);
+                updateDisplay();
+            }
+            if (savedHistory) {
+                history = JSON.parse(savedHistory);
+                updateHistory();
+            }
+        });
+
+        function increment() {
+            count++;
+            updateDisplay();
+            saveData();
+            playSound();
+        }
+
+        function decrement() {
+            if (count > 0) {
+                count--;
+                updateDisplay();
+                saveData();
+            }
+        }
+
+        function reset() {
+            if (confirm('هل تريد فعلاً إعادة تعيين العداد؟')) {
+                if (count > 0) {
+                    history.unshift(count);
+                    if (history.length > maxStorage) {
+                        history.pop();
+                    }
+                    updateHistory();
+                }
+                count = 0;
+                updateDisplay();
+                saveData();
+            }
+        }
+
+        function addValue(value) {
+            count += value;
+            updateDisplay();
+            saveData();
+        }
+
+        function updateDisplay() {
+            document.getElementById('counterDisplay').textContent = count;
+        }
+
+        function updateHistory() {
+            const historyText = history.length > 0 ? history.join(', ') : 'لا يوجد';
+            document.getElementById('history').textContent = historyText;
+            localStorage.setItem('tasbeehHistory', JSON.stringify(history));
+        }
+
+        function saveData() {
+            localStorage.setItem('tasbeehCount', count);
+        }
+
+        function playSound() {
+            // صوت بسيط
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
+        }
+
+        // اختصارات لوحة المفاتيح
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                increment();
+            }
+            if (e.code === 'Backspace') {
+                e.preventDefault();
+                reset();
+            }
+        });
+    </script>
+</body>
+</html>
