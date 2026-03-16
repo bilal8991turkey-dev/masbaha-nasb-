@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>مسبحة نسب - المهندس بلال</title>
     
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#10b981">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="مسبحة نسب">
+    <meta name="theme-color" content="#10b981">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2972/2972531.png">
+    <link rel="manifest" href="manifest.json">
 
     <style>
         :root { 
@@ -22,6 +24,7 @@
             margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; 
             background-color: var(--bg); color: #334155;
             display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+            -webkit-tap-highlight-color: transparent; /* يمنع الوميض الأزرق عند اللمس في التطبيق */
         }
         .app-container { width: 92%; max-width: 400px; text-align: center; padding-top: 10px; }
 
@@ -43,11 +46,9 @@
         }
         .brand-sub { display: block; font-size: 0.7rem; color: #64748b; letter-spacing: 5px; font-weight: bold; margin-top: 5px; }
 
-        /* --- الأدوات العلوية --- */
         .header-tools { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 10px; margin-bottom: 10px; }
         .reset-txt { background: none; border: none; color: #94a3b8; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
 
-        /* --- البطاقة الرئيسية --- */
         .main-card { background: var(--card); border-radius: 35px; padding: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.05); margin-bottom: 20px; }
         
         .counter-box { display: flex; align-items: center; justify-content: space-around; margin-bottom: 20px; }
@@ -62,149 +63,7 @@
         .circle-progress { fill: none; stroke: var(--main-green); stroke-width: 12; stroke-linecap: round; stroke-dasharray: 471; stroke-dashoffset: 471; transition: 0.4s; }
         .count-num { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3.5rem; font-weight: 900; color: var(--dark-blue); }
 
-        .main-btn { background-color: var(--light-green); color: white; border: none; width: 100%; padding: 18px; border-radius: 20px; font-size: 1.8rem; font-weight: 900; cursor: pointer; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(52, 211, 153, 0.3); }
+        .main-btn { background-color: var(--light-green); color: white; border: none; width: 100%; padding: 18px; border-radius: 20px; font-size: 1.8rem; font-weight: 900; cursor: pointer; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(52, 211, 153, 0.3); outline: none; }
 
-        /* --- شبكة الأوقات --- */
         .prayer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-        .p-card { background: #f8fafc; padding: 10px 2px; border-radius: 15px; border: 1px solid transparent; }
-        .p-card.active-p { border-color: var(--main-green); background: rgba(16, 185, 129, 0.05); }
-        .p-name { font-size: 0.7rem; font-weight: bold; color: #64748b; }
-        .p-time { font-size: 0.9rem; font-weight: 900; color: var(--dark-blue); }
-        .p-timer { font-size: 0.6rem; color: #ef4444; font-weight: bold; margin-top: 4px; }
-
-        .dua-box { background: rgba(255,255,255,0.7); padding: 18px; border-radius: 20px; border: 1px dashed var(--main-green); line-height: 1.7; font-size: 0.9rem; margin-bottom: 20px; }
-        
-        /* --- البوصلة --- */
-        .compass-area { background: #fff; padding: 15px; border-radius: 25px; cursor: pointer; display: inline-block; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-        #compass { width: 50px; height: 50px; transition: transform 0.1s; }
-    </style>
-</head>
-<body>
-
-    <div class="app-container">
-        <div class="pro-header">
-            <span class="brand-name">نَسَب تُرْكي</span>
-            <span class="brand-sub">مِسْبَحَةٌ إلِكْترُونِيَّة</span>
-        </div>
-
-        <div class="header-tools">
-            <button onclick="location.reload()" style="border:none; background:none; cursor:pointer; font-size: 1.1rem;">🔄</button>
-            <button class="reset-txt" onclick="reset()">تصفير العداد</button>
-        </div>
-
-        <div class="main-card">
-            <div class="counter-box">
-                <div class="list-side">
-                    <div id="i0" class="item active">سبحان الله</div>
-                    <div id="i1" class="item">الحمد لله</div>
-                    <div id="i2" class="item">الله أكبر</div>
-                    <div id="i3" class="item">لا إله إلا الله</div>
-                </div>
-                <div class="circle-side" onclick="tap()">
-                    <svg><circle class="circle-bg" cx="80" cy="80" r="75"></circle>
-                         <circle id="bar" class="circle-progress" cx="80" cy="80" r="75"></circle></svg>
-                    <div class="count-num" id="display">0</div>
-                </div>
-            </div>
-
-            <button class="main-btn" onclick="tap()">سبّح الآن 📿</button>
-
-            <div class="prayer-grid">
-                <div class="p-card" id="c-Fajr"><div class="p-name">الفجر</div><div id="Fajr" class="p-time">--:--</div><div id="t-Fajr" class="p-timer"></div></div>
-                <div class="p-card" id="c-Dhuhr"><div class="p-name">الظهر</div><div id="Dhuhr" class="p-time">--:--</div><div id="t-Dhuhr" class="p-timer"></div></div>
-                <div class="p-card" id="c-Asr"><div class="p-name">العصر</div><div id="Asr" class="p-time">--:--</div><div id="t-Asr" class="p-timer"></div></div>
-                <div class="p-card" id="c-Maghrib"><div class="p-name">المغرب</div><div id="Maghrib" class="p-time">--:--</div><div id="t-Maghrib" class="p-timer"></div></div>
-                <div class="p-card" id="c-Isha"><div class="p-name">العشاء</div><div id="Isha" class="p-time">--:--</div><div id="t-Isha" class="p-timer"></div></div>
-                <div class="p-card"><div class="p-name">المجموع</div><div id="total" class="p-time">0</div></div>
-            </div>
-        </div>
-
-        <div class="dua-box">
-            اللهم ارحم <b>نسب</b> واغفر لها، واجمعنا بها في جنات النعيم، وألهمنا الصبر على فراقها.
-        </div>
-
-        <div class="compass-area" onclick="initCompass()">
-            <svg id="compass" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z" fill="#ef4444" /></svg>
-            <div style="font-size: 0.6rem; margin-top: 5px; font-weight: bold;" id="qStatus">اضغط لتفعيل القِبلة</div>
-        </div>
-
-        <div style="font-size: 0.8rem; padding-bottom: 30px; opacity: 0.6;">المهندس <b>بلال تركي هلال</b></div>
-    </div>
-
-    <script>
-        let c = 0, t = parseInt(localStorage.getItem('b_t_vFinal')) || 0, idx = 0;
-        let times = {};
-
-        function tap() {
-            c++; t++;
-            if (navigator.vibrate) navigator.vibrate(35);
-            if (c >= 33) {
-                document.getElementById('i'+idx).classList.add('done');
-                if (c > 33) { 
-                    c = 1; idx = (idx + 1) % 4;
-                    if (idx === 0) for(let i=0; i<4; i++) document.getElementById('i'+i).classList.remove('done');
-                }
-            }
-            update();
-        }
-
-        function update() {
-            document.getElementById('display').innerText = c;
-            document.getElementById('total').innerText = t;
-            document.getElementById('bar').style.strokeDashoffset = 471 - (c / 33) * 471;
-            for(let i=0; i<4; i++) document.getElementById('i'+i).classList.remove('active');
-            document.getElementById('i'+idx).classList.add('active');
-            localStorage.setItem('b_t_vFinal', t);
-        }
-
-        async function getT() {
-            try {
-                const r = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Ramadi&country=Iraq&method=4');
-                const d = await r.json();
-                times = d.data.timings;
-                const names = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
-                names.forEach(n => document.getElementById(n).innerText = times[n]);
-                setInterval(updateTimers, 1000);
-            } catch(e) {}
-        }
-
-        function updateTimers() {
-            let now = new Date();
-            let next = null, min = Infinity;
-            const names = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
-            names.forEach(n => {
-                document.getElementById('c-'+n).classList.remove('active-p');
-                document.getElementById('t-'+n).innerText = "";
-                let [h, m] = times[n].split(':');
-                let pt = new Date(); pt.setHours(h, m, 0);
-                if (pt < now) pt.setDate(pt.getDate() + 1);
-                let diff = pt - now;
-                if (diff < min) { min = diff; next = n; }
-            });
-            if (next) {
-                document.getElementById('c-'+next).classList.add('active-p');
-                let s = Math.floor(min/1000), mm = Math.floor(s/60), hh = Math.floor(mm/60);
-                document.getElementById('t-'+next).innerText = `${hh}:${String(mm%60).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
-            }
-        }
-
-        function initCompass() {
-            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                DeviceOrientationEvent.requestPermission().then(res => {
-                    if (res == 'granted') window.addEventListener('deviceorientation', moveC, true);
-                });
-            } else { window.addEventListener('deviceorientation', moveC, true); window.addEventListener('deviceorientationabsolute', moveC, true); }
-            document.getElementById('qStatus').innerText = "تم التفعيل";
-        }
-
-        function moveC(e) {
-            let h = e.webkitCompassHeading || (360 - e.alpha);
-            if (h) document.getElementById('compass').style.transform = `rotate(${197.5 - h}deg)`;
-        }
-
-        function reset() { if(confirm("تصفير العداد؟")) { t=0; c=0; update(); } }
-        
-        update(); getT();
-    </script>
-</body>
-</html>
+        .p-card { background: #f8fafc; padding
