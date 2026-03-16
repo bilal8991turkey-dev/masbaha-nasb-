@@ -3,268 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عداد التسبيح</title>
+    <title>مسبحة نسب - مكتبة الغيث</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --primary-bg: #f4f7f6;
+            --card-bg: #ffffff;
+            --accent-color: #2c3e50;
+            --subhan-color: #27ae60;
+            --akbar-color: #2980b9;
+            --tahlil-color: #8e44ad;
+            --text-main: #34495e;
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-bg);
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            padding: 20px;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-main);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--accent-color);
+            font-size: 2rem;
+            margin-bottom: 5px;
         }
 
         .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 40px;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 90%;
             max-width: 400px;
-            width: 100%;
         }
 
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 28px;
-        }
-
-        .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 14px;
+        .tasbih-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.2s;
         }
 
         .counter-display {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-size: 72px;
+            font-size: 3rem;
             font-weight: bold;
-            padding: 40px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            min-height: 150px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin: 10px 0;
+            color: var(--accent-color);
         }
 
-        .buttons {
+        .dhikr-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .btn-group {
             display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
+            gap: 10px;
+            width: 100%;
         }
 
         button {
-            padding: 15px 30px;
-            font-size: 16px;
+            flex: 1;
+            padding: 15px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.1s ease;
+            color: white;
             font-weight: bold;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .btn-increment {
-            background: #667eea;
-            color: white;
-            flex: 1;
-            min-width: 100px;
+        button:active {
+            transform: scale(0.95);
+            filter: brightness(0.9);
         }
 
-        .btn-increment:hover {
-            background: #5568d3;
-            transform: scale(1.05);
-        }
-
-        .btn-increment:active {
-            transform: scale(0.98);
-        }
-
+        .btn-subhan { background-color: var(--subhan-color); }
+        .btn-akbar { background-color: var(--akbar-color); }
+        .btn-tahlil { background-color: var(--tahlil-color); }
+        
         .btn-reset {
-            background: #ff6b6b;
-            color: white;
-            flex: 1;
-            min-width: 100px;
+            background-color: #e74c3c;
+            margin-top: 10px;
+            padding: 8px;
+            font-size: 0.9rem;
+            opacity: 0.8;
         }
 
-        .btn-reset:hover {
-            background: #ff5252;
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #7f8c8d;
         }
 
-        .btn-minus {
-            background: #ffa500;
-            color: white;
-            flex: 1;
-            min-width: 100px;
-        }
+        .footer b { color: var(--accent-color); }
 
-        .btn-minus:hover {
-            background: #ff9500;
+        /* تأثير الاهتزاز البسيط */
+        @keyframes click-shake {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(1px, 1px); }
+            100% { transform: translate(0, 0); }
         }
+        .click-effect { animation: click-shake 0.1s ease-in-out; }
 
-        .quick-presets {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .preset-btn {
-            background: #ecf0f1;
-            color: #333;
-            padding: 8px 15px;
-            font-size: 12px;
-            border-radius: 8px;
-        }
-
-        .preset-btn:hover {
-            background: #bdc3c7;
-        }
-
-        .stats {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px solid #ecf0f1;
-            color: #666;
-            font-size: 14px;
-        }
     </style>
 </head>
 <body>
+
+    <div class="header">
+        <h1>مسبحة نسب تركي 📿</h1>
+        <p>اذكر الله يذكرك</p>
+    </div>
+
     <div class="container">
-        <h1>🤲 عداد التسبيح</h1>
-        <p class="subtitle">حسّب تسبيحاتك بسهولة</p>
-
-        <div class="counter-display" id="counterDisplay">0</div>
-
-        <div class="buttons">
-            <button class="btn-increment" onclick="increment()">➕ إضافة</button>
-            <button class="btn-minus" onclick="decrement()">➖ طرح</button>
-            <button class="btn-reset" onclick="reset()">🔄 إعادة تعيين</button>
+        <div class="tasbih-card" id="card-1">
+            <span class="dhikr-title" style="color: var(--subhan-color);">سبحان الله</span>
+            <div class="counter-display" id="count-subhan">0</div>
+            <div class="btn-group">
+                <button class="btn-subhan" onclick="increment('subhan')">تسبيح</button>
+                <button class="btn-reset" onclick="resetCount('subhan')">تصفير</button>
+            </div>
         </div>
 
-        <div class="quick-presets">
-            <button class="preset-btn" onclick="addValue(33)">+33</button>
-            <button class="preset-btn" onclick="addValue(99)">+99</button>
-            <button class="preset-btn" onclick="addValue(100)">+100</button>
+        <div class="tasbih-card" id="card-2">
+            <span class="dhikr-title" style="color: var(--akbar-color);">الله أكبر</span>
+            <div class="counter-display" id="count-akbar">0</div>
+            <div class="btn-group">
+                <button class="btn-akbar" onclick="increment('akbar')">تكبير</button>
+                <button class="btn-reset" onclick="resetCount('akbar')">تصفير</button>
+            </div>
         </div>
 
-        <div class="stats">
-            <p>السجل: <span id="history"></span></p>
+        <div class="tasbih-card" id="card-3">
+            <span class="dhikr-title" style="color: var(--tahlil-color);">لا إله إلا الله</span>
+            <div class="counter-display" id="count-tahlil">0</div>
+            <div class="btn-group">
+                <button class="btn-tahlil" onclick="increment('tahlil')">تهليل</button>
+                <button class="btn-reset" onclick="resetCount('tahlil')">تصفير</button>
+            </div>
         </div>
     </div>
 
+    <div class="footer">
+        <p>أن شاء الله</p>
+        <p>عمل <b>مكتبة الغيث</b></p>
+    </div>
+
     <script>
-        let count = 0;
-        const maxStorage = 10;
-        let history = [];
+        function increment(type) {
+            const element = document.getElementById('count-' + type);
+            let current = parseInt(element.innerText);
+            element.innerText = current + 1;
 
-        // تحميل البيانات المحفوظة
-        window.addEventListener('load', () => {
-            const saved = localStorage.getItem('tasbeehCount');
-            const savedHistory = localStorage.getItem('tasbeehHistory');
-            if (saved) {
-                count = parseInt(saved);
-                updateDisplay();
+            // تكة خفيفة (اهتزاز للموبايل)
+            if (navigator.vibrate) {
+                navigator.vibrate(20);
             }
-            if (savedHistory) {
-                history = JSON.parse(savedHistory);
-                updateHistory();
-            }
-        });
 
-        function increment() {
-            count++;
-            updateDisplay();
-            saveData();
-            playSound();
+            // إضافة تأثير حركي للبطاقة
+            const card = element.parentElement;
+            card.classList.add('click-effect');
+            setTimeout(() => card.classList.remove('click-effect'), 100);
         }
 
-        function decrement() {
-            if (count > 0) {
-                count--;
-                updateDisplay();
-                saveData();
+        function resetCount(type) {
+            if(confirm('هل تريد تصفير العداد؟')) {
+                document.getElementById('count-' + type).innerText = 0;
             }
         }
-
-        function reset() {
-            if (confirm('هل تريد فعلاً إعادة تعيين العداد؟')) {
-                if (count > 0) {
-                    history.unshift(count);
-                    if (history.length > maxStorage) {
-                        history.pop();
-                    }
-                    updateHistory();
-                }
-                count = 0;
-                updateDisplay();
-                saveData();
-            }
-        }
-
-        function addValue(value) {
-            count += value;
-            updateDisplay();
-            saveData();
-        }
-
-        function updateDisplay() {
-            document.getElementById('counterDisplay').textContent = count;
-        }
-
-        function updateHistory() {
-            const historyText = history.length > 0 ? history.join(', ') : 'لا يوجد';
-            document.getElementById('history').textContent = historyText;
-            localStorage.setItem('tasbeehHistory', JSON.stringify(history));
-        }
-
-        function saveData() {
-            localStorage.setItem('tasbeehCount', count);
-        }
-
-        function playSound() {
-            // صوت بسيط
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.value = 800;
-            oscillator.type = 'sine';
-            
-            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-            
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.1);
-        }
-
-        // اختصارات لوحة المفاتيح
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                increment();
-            }
-            if (e.code === 'Backspace') {
-                e.preventDefault();
-                reset();
-            }
-        });
     </script>
 </body>
 </html>
